@@ -87,9 +87,17 @@ void sixteedDayFcast(void) {
   delete[] ow_fcast16;
 }
 
+OWM_fiveForecast *ow_fcast5;
+byte entries;
+
+void get5DayForecast() {
+  Serial.print("Getting Forecast... ");
+  ow_fcast5 = new OWM_fiveForecast[40];
+  entries = owF5.updateForecast(ow_fcast5, 40, ow_key, OWM_COUNTRY, OWM_CITY, "metric");
+  Serial.println("Done!");
+}
+
 void getTemperatures(sint16_t *buf) {
-  OWM_fiveForecast *ow_fcast5 = new OWM_fiveForecast[40];
-  byte entries = owF5.updateForecast(ow_fcast5, 40, ow_key, OWM_COUNTRY, OWM_CITY, "metric");
   for (byte i = 0; i <= entries; ++i) {
     buf[i] = (int)round(ow_fcast5[i].temp.toFloat()); // <- AVERAGE OF MIN AND MAX! IS THIS OK?
     // buf[i] = (int)round((ow_fcast5[i].t_min.toFloat() + ow_fcast5[i].t_max.toFloat()) / 2); // <- AVERAGE OF MIN AND MAX! IS THIS OK?
@@ -97,8 +105,8 @@ void getTemperatures(sint16_t *buf) {
 }
 
 void getIcons(sint16_t *buf) {
-  OWM_fiveForecast *ow_fcast5 = new OWM_fiveForecast[40];
-  byte entries = owF5.updateForecast(ow_fcast5, 40, ow_key, OWM_COUNTRY, OWM_CITY, "metric");
+  // OWM_fiveForecast *ow_fcast5 = new OWM_fiveForecast[40];
+  // byte entries = owF5.updateForecast(ow_fcast5, 40, ow_key, OWM_COUNTRY, OWM_CITY, "metric");
   for (byte i = 0; i <= entries; ++i) {
     buf[i] = ow_fcast5[i].icon.toInt();
   }
