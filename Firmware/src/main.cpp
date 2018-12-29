@@ -6,7 +6,9 @@ int delayval = 20;
 
 #define DATA_LEN 40
 sint16_t temps[DATA_LEN] = {0};
+sint16_t icons[DATA_LEN] = {0};
 struct struct_color tempcolors[DATA_LEN];
+struct struct_color iconcolors[DATA_LEN];
 
 void setup() {
   Serial.begin(115200);
@@ -28,12 +30,17 @@ void loop() {
       // getWeatherType();
       Serial.println("Getting Temps!");
       getTemperatures(temps);
+      getIcons(icons);
       for (size_t i = 0; i < DATA_LEN; i++) {
-        tempcolors[i] = TempToColor(temps[i]);
+        // tempcolors[i] = TempToColor(temps[i]);
+        tempcolors[i] = IconToColor(icons[i]);
+        // tempicons[i] = TempToColor(temps[i]);
 
         Serial.print(i);
-        Serial.print('\t');
+        Serial.print(" :\t");
         Serial.print(temps[i]);
+        Serial.print('\t');
+        Serial.print(icons[i]);
         Serial.print('\t');
         Serial.print('\t');
         Serial.print(tempcolors[i].r);

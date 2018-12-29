@@ -121,4 +121,32 @@ struct struct_color TempToColor(sint16_t temp) {
   return result;
 }
 
+#define COLOR_CLEAR  {  0, 255, 255}
+#define COLOR_CLOUDS {255, 255, 255}
+
+struct struct_color IconToColor(sint16_t icon) {
+  struct struct_color result;
+  result.r = 0;
+  result.g = 0;
+  result.b = 0;
+  switch(icon) {
+    case 1:
+      result.r=0;
+      result.g=255;
+      result.b=255;
+      break;
+    case 10:
+      result.r=255;
+      result.g=255;
+      result.b=255;
+      break;
+    default:
+      result.r=255;
+      result.g=0;
+      result.b=0;
+      break;
+  }
+  return result;
+}
+
 #endif

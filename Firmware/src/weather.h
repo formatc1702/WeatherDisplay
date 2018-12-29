@@ -91,25 +91,16 @@ void getTemperatures(sint16_t *buf) {
   OWM_fiveForecast *ow_fcast5 = new OWM_fiveForecast[40];
   byte entries = owF5.updateForecast(ow_fcast5, 40, ow_key, OWM_COUNTRY, OWM_CITY, "metric");
   for (byte i = 0; i <= entries; ++i) {
-    // temperatures[i] = (int)round((ow_fcast5[i].t_min.toFloat() + ow_fcast5[i].t_max.toFloat()) / 2);
-    buf[i] = (int)round((ow_fcast5[i].t_min.toFloat() + ow_fcast5[i].t_max.toFloat()) / 2);
+    buf[i] = (int)round((ow_fcast5[i].t_min.toFloat() + ow_fcast5[i].t_max.toFloat()) / 2); // <- AVERAGE OF MIN AND MAX! IS THIS OK?
   }
-  // for (byte i = 0; i <= 40; ++i) {
-  //   Serial.print(i);
-  //   Serial.print('\t');
-  //   Serial.print(temperatures[i]);
-  //   Serial.print('\t');
-  //   Serial.print('\t');
-  //   struct struct_color _c = TempToColor(temperatures[i]);
-  //   Serial.print(_c.r);
-  //   Serial.print('\t');
-  //   Serial.print(_c.g);
-  //   Serial.print('\t');
-  //   Serial.print(_c.b);
-  //   Serial.print('\t');
-  //   Serial.print('\n');
-  // }
-  // Serial.println();
+}
+
+void getIcons(sint16_t *buf) {
+  OWM_fiveForecast *ow_fcast5 = new OWM_fiveForecast[40];
+  byte entries = owF5.updateForecast(ow_fcast5, 40, ow_key, OWM_COUNTRY, OWM_CITY, "metric");
+  for (byte i = 0; i <= entries; ++i) {
+    buf[i] = ow_fcast5[i].icon.toInt();
+  }
 }
 
 #endif
