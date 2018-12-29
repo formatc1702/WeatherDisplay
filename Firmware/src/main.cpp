@@ -1,97 +1,35 @@
-#include <Adafruit_NeoPixel.h>
-// #include <ArduinoJson.h>
-// #include <WiFiClient.h>
-
 #include "ledstrip.h"
-
 #include "weather.h"
 #include "weathercolors.h"
 
-#define NP_PIN          4
-#define NUMPIXELS      40
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, NP_PIN, NEO_GRB + NEO_KHZ800);
-
-#define ANI_TYPE_OFF   0
-#define ANI_TYPE_ON    1
-#define ANI_TYPE_BLINK 2
-#define ANI_TYPE_PULSE 3
-#define ANI_TYPE_RAMP  4
-
 int delayval = 20;
-
-uint32_t colors[NUMPIXELS];
-
-// input colors
-uint8_t  ri[NUMPIXELS];
-uint8_t  gi[NUMPIXELS];
-uint8_t  bi[NUMPIXELS];
-
-// animation parameters
-uint8_t  ani_type   [NUMPIXELS];
-uint8_t  ani_min    [NUMPIXELS];
-uint8_t  ani_max    [NUMPIXELS];
-uint16_t ani_offset [NUMPIXELS];
-uint16_t ani_time   [NUMPIXELS];
-
-// internal variables
-uint16_t  brightness[NUMPIXELS];
-
-// input colors
-uint8_t  ro[NUMPIXELS];
-uint8_t  go[NUMPIXELS];
-uint8_t  bo[NUMPIXELS];
-
-void animate() {
-  long now = millis();
-  for (size_t i = 0; i < NUMPIXELS; i++) {
-    switch (ani_type[i]) {
-      case ANI_TYPE_OFF:
-        brightness[i] = 0;
-        break;
-      case ANI_TYPE_ON:
-        brightness[i] = ani_max[i];
-        break;
-      case ANI_TYPE_BLINK:
-        if ((now + ani_offset[i]) % ani_time[i] < ani_time[i] / 2)
-          brightness[i] = ani_max[i];
-        else
-          brightness[i] = ani_min[i];
-        break;
-      case ANI_TYPE_PULSE:
-        brightness[i] = (uint8_t)map((long)
-                                     (255.0 * (0.5 * sin( (float)(now + ani_offset[i]) * 2.0 * 3.14159 / (float)ani_time[i]) + 0.5)),
-                                     0, 255, ani_min[i], ani_max[i]);
-        break;
-      default:
-        brightness[i] = 255;
-    }
-    ro[i] = (uint8_t)(((uint16_t)ri[i] * brightness[i]) / 256);
-    go[i] = (uint8_t)(((uint16_t)gi[i] * brightness[i]) / 256);
-    bo[i] = (uint8_t)(((uint16_t)bi[i] * brightness[i]) / 256);
-    pixels.setPixelColor(i, pixels.Color(ro[i], go[i], bo[i]));
-  }
-}
-
-void setup() {
-  Serial.begin(115200);
-  pixels.begin();
-  // delay(3000);
-  connectWiFiInit();
-}
 
 #define DATA_LEN 40
 sint16_t temps[DATA_LEN] = {0};
 struct struct_color tempcolors[DATA_LEN];
 
+void setup() {
+  Serial.begin(115200);
+  delay(500);
+  Serial.println("Guten Tag!");
+  StartPixels();
+  // delay(3000);
+  Serial.println("Hello!");
+  connectWiFiInit();
+
+}
+
 void loop() {
   if (WF_status == W_TRY) {
     if (WiFi.status() == WL_CONNECTED) {
+      Serial.println("Connected!");
       MDNS.begin(nodename);
       WF_status = W_READY;
       // getWeatherType();
+      Serial.println("Getting Temps!");
       getTemperatures(temps);
       for (size_t i = 0; i < DATA_LEN; i++) {
-        tempcolors[i] = getRGB3((temps[i] * -6 + 180)  % 360, 255, 255);
+        tempcolors[i] = TempToColor(temps[i]);
 
         Serial.print(i);
         Serial.print('\t');
@@ -104,13 +42,18 @@ void loop() {
         Serial.print('\t');
         Serial.print(tempcolors[i].b);
         Serial.print('\n');
+        if (i % 8 == 7)
+          Serial.print('\n');
+
         if (i < NUMPIXELS)
-          pixels.setPixelColor(i, pixels.Color(tempcolors[i].r, tempcolors[i].g, tempcolors[i].b));
+          SetPixelColor(i, tempcolors[i].r, tempcolors[i].g, tempcolors[i].b);
       }
-      pixels.show();
+      ShowPixels();
+      while(true) {
+        delay(1000);
+      };
     }
   }
-  delay(1000);
 }
 
 /*

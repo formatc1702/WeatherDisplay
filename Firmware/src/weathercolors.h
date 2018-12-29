@@ -28,28 +28,6 @@ struct struct_color {
   uint8_t b;
 };
 
-struct struct_color TempToColor(sint16_t temp) {
-  struct struct_color c;
-  if (temp < 0) {
-    c.r = 0;
-    c.g = 0;
-    c.b = 255;
-  } else if (temp == 0) {
-    c.r = 0;
-    c.g = 255;
-    c.b = 0;
-  } else if (temp > 0) {
-    c.r = 255;
-    c.g = 0;
-    c.b = 0;
-  } else { // WTF?
-    c.r = 255;
-    c.g = 255;
-    c.b = 255;
-  }
-  return c;
-}
-
 struct struct_color getRGB(int hue, int sat, int val) {
   struct struct_color result;
   /* convert hue, saturation and brightness ( HSB/HSV ) to RGB
@@ -60,9 +38,9 @@ struct struct_color getRGB(int hue, int sat, int val) {
   val = dim_curve[val];
   sat = 255-dim_curve[255-sat];
 
-  int r;
-  int g;
-  int b;
+  int r = 0;
+  int g = 0;
+  int b = 0;
   int base;
 
   if (sat == 0) { // Acromatic color (gray). Hue doesn't mind.
@@ -134,6 +112,12 @@ struct struct_color getRGB3(int hue, int sat, int val) {
   result.r=result.r / 2 + dim_curve[result.r] / 2;
   result.g=result.g / 2 + dim_curve[result.g] / 2;
   result.b=result.b / 2 + dim_curve[result.b] / 2;
+  return result;
+}
+
+struct struct_color TempToColor(sint16_t temp) {
+  struct struct_color result;
+  result = getRGB3((temp * -6 + 180 + 360)  % 360, 255, 255);
   return result;
 }
 
