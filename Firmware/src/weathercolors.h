@@ -121,8 +121,15 @@ struct struct_color TempToColor(sint16_t temp) {
   return result;
 }
 
-#define COLOR_CLEAR  {  0, 255, 255}
-#define COLOR_CLOUDS {255, 255, 255}
+#define COLOR_CLEAR            {  0, 255, 255}
+#define COLOR_CLOUDS_FEW       {128, 255, 255}
+#define COLOR_CLOUDS_SCATTERED {255, 255, 255}
+#define COLOR_CLOUDS_BROKEN    {  0,   0, 255}
+#define COLOR_RAIN_SHOWER      {  0,   0, 255}
+#define COLOR_RAIN_RAIN        {  0,   0, 255}
+#define COLOR_THUNDERSTORM     {255, 255,   0}
+#define COLOR_SNOW             {255, 255, 255}
+#define COLOR_MIST             {128, 128, 128}
 
 struct struct_color IconToColor(sint16_t icon) {
   struct struct_color result;
@@ -130,21 +137,16 @@ struct struct_color IconToColor(sint16_t icon) {
   result.g = 0;
   result.b = 0;
   switch(icon) {
-    case 1:
-      result.r=0;
-      result.g=255;
-      result.b=255;
-      break;
-    case 10:
-      result.r=255;
-      result.g=255;
-      result.b=255;
-      break;
-    default:
-      result.r=255;
-      result.g=0;
-      result.b=0;
-      break;
+    case  1:  result = COLOR_CLEAR;            break;
+    case  2:  result = COLOR_CLOUDS_FEW;       break;
+    case  3:  result = COLOR_CLOUDS_SCATTERED; break;
+    case  4:  result = COLOR_CLOUDS_BROKEN;    break;
+    case  9:  result = COLOR_RAIN_SHOWER;      break;
+    case 10:  result = COLOR_RAIN_RAIN;        break;
+    case 11:  result = COLOR_THUNDERSTORM;     break;
+    case 13:  result = COLOR_SNOW;             break;
+    case 50:  result = COLOR_MIST;             break;
+    default:  result = {0, 255, 0};            break;
   }
   return result;
 }

@@ -29,12 +29,12 @@ void loop() {
       WF_status = W_READY;
       // getWeatherType();
       Serial.println("Getting Temps!");
+      fiveDayFcast();
       getTemperatures(temps);
       getIcons(icons);
       for (size_t i = 0; i < DATA_LEN; i++) {
         // tempcolors[i] = TempToColor(temps[i]);
         tempcolors[i] = IconToColor(icons[i]);
-        // tempicons[i] = TempToColor(temps[i]);
 
         Serial.print(i);
         Serial.print(" :\t");

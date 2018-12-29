@@ -60,7 +60,7 @@ void fiveDayFcast(void) {
   for (byte i = 0; i <= entries; ++i) {
     Serial.print(dateTime(ow_fcast5[i].dt) + ": icon: ");
     Serial.print(ow_fcast5[i].icon + ", temp.: [" + ow_fcast5[i].t_min + ", " + ow_fcast5[i].t_max + "], p=" + ow_fcast5[i].pressure);
-    Serial.print(", " + ow_fcast5[i].description + ":: " + ow_fcast5[i].cond + " " + ow_fcast5[i].cond_value);
+    Serial.print(", " + ow_fcast5[i].id + " = " + ow_fcast5[i].description + ":: " + ow_fcast5[i].cond + " " + ow_fcast5[i].cond_value);
     Serial.println();
     // Serial.print("\t" + ( + ow_fcast5[i].t_max.toInt()) / 2);
     Serial.println((int)round((ow_fcast5[i].t_min.toFloat() + ow_fcast5[i].t_max.toFloat()) / 2));
@@ -91,7 +91,8 @@ void getTemperatures(sint16_t *buf) {
   OWM_fiveForecast *ow_fcast5 = new OWM_fiveForecast[40];
   byte entries = owF5.updateForecast(ow_fcast5, 40, ow_key, OWM_COUNTRY, OWM_CITY, "metric");
   for (byte i = 0; i <= entries; ++i) {
-    buf[i] = (int)round((ow_fcast5[i].t_min.toFloat() + ow_fcast5[i].t_max.toFloat()) / 2); // <- AVERAGE OF MIN AND MAX! IS THIS OK?
+    buf[i] = (int)round(ow_fcast5[i].temp.toFloat()); // <- AVERAGE OF MIN AND MAX! IS THIS OK?
+    // buf[i] = (int)round((ow_fcast5[i].t_min.toFloat() + ow_fcast5[i].t_max.toFloat()) / 2); // <- AVERAGE OF MIN AND MAX! IS THIS OK?
   }
 }
 
