@@ -14,6 +14,10 @@ void setup() {
   Serial.begin(115200);
   delay(500);
   StartPixels();
+  for (size_t i = 0; i < DATA_LEN; i++) {
+    temps[i] = 0;
+    icons[i] = 0;
+  }
   // delay(3000);
   // mypixels[0] = {255, 0, 0, ANI_TYPE_PULSE, 0, 255, 0, 1000, 255};
   // while(true) {
@@ -33,11 +37,20 @@ void loop() {
       // fiveDayFcast();
       Serial.println("Getting data!");
       // getTemperatures(temps);
-      getIcons(icons);
+      // getIcons(icons);
       for (size_t i = 0; i < DATA_LEN; i++) {
         if (i < NUMPIXELS) {
           // tempcolors[i] = TempToColor(temps[i]);
-          iconcolors[i] = IconToColor(icons[i]);
+          iconcolors[0] = COLOR_CLEAR;
+          iconcolors[1] = COLOR_CLOUDS_FEW;
+          iconcolors[2] = COLOR_CLOUDS_SCATTERED;
+          iconcolors[3] = COLOR_CLOUDS_BROKEN;
+          iconcolors[4] = COLOR_RAIN_SHOWER;
+          iconcolors[5] = COLOR_RAIN_RAIN;
+          iconcolors[6] = COLOR_THUNDERSTORM;
+          iconcolors[7] = COLOR_SNOW;
+          iconcolors[8] = COLOR_MIST;
+          // iconcolors[i] = IconToColor(icons[i]);
 
           Serial.print(i);
           Serial.print(" :\t");
