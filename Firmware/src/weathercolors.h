@@ -2,6 +2,7 @@
 #define __WEATHERCOLORS_H
 
 #include <Arduino.h>
+#include "ledstrip.h"
 
 const byte dim_curve[] = {
     0,   1,   1,   2,   2,   2,   2,   2,   2,   3,   3,   3,   3,   3,   3,   3,
@@ -22,14 +23,8 @@ const byte dim_curve[] = {
     193, 196, 200, 203, 207, 211, 214, 218, 222, 226, 230, 234, 238, 242, 248, 255,
 };
 
-struct struct_color {
-  uint8_t r;
-  uint8_t g;
-  uint8_t b;
-};
-
-struct struct_color getRGB(int hue, int sat, int val) {
-  struct struct_color result;
+struct color_static getRGB(int hue, int sat, int val) {
+  struct color_static result;
   /* convert hue, saturation and brightness ( HSB/HSV ) to RGB
      The dim_curve is used only on brightness/value and on saturation (inverted).
      This looks the most natural.
@@ -97,8 +92,8 @@ struct struct_color getRGB(int hue, int sat, int val) {
   return result;
 }
 
-struct struct_color getRGB2(int hue, int sat, int val) {
-  struct struct_color result;
+struct color_static getRGB2(int hue, int sat, int val) {
+  struct color_static result;
   result = getRGB(hue, sat, val);
   result.r=dim_curve[result.r];
   result.g=dim_curve[result.g];
@@ -106,8 +101,8 @@ struct struct_color getRGB2(int hue, int sat, int val) {
   return result;
 }
 
-struct struct_color getRGB3(int hue, int sat, int val) {
-  struct struct_color result;
+struct color_static getRGB3(int hue, int sat, int val) {
+  struct color_static result;
   result = getRGB(hue, sat, val);
   result.r=result.r / 2 + dim_curve[result.r] / 2;
   result.g=result.g / 2 + dim_curve[result.g] / 2;
@@ -115,27 +110,26 @@ struct struct_color getRGB3(int hue, int sat, int val) {
   return result;
 }
 
-struct struct_color TempToColor(sint16_t temp) {
-  struct struct_color result;
+struct color_static TempToColor(sint16_t temp) {
+  struct color_static result;
   result = getRGB3((temp * -6 + 180 + 360)  % 360, 255, 255);
   return result;
 }
 
-#define COLOR_CLEAR            {  0, 255, 255}
-#define COLOR_CLOUDS_FEW       {128, 255, 255}
-#define COLOR_CLOUDS_SCATTERED {255, 255, 255}
-#define COLOR_CLOUDS_BROKEN    {  0,   0, 255}
-#define COLOR_RAIN_SHOWER      {  0,   0, 255}
-#define COLOR_RAIN_RAIN        {  0,   0, 255}
-#define COLOR_THUNDERSTORM     {255, 255,   0}
-#define COLOR_SNOW             {255, 255, 255}
-#define COLOR_MIST             {128, 128, 128}
+#define COLOR_OFF              {  255,   0,   0, ANI_TYPE_PULSE, 0, 255, 0, 1000, 255}
+#define COLOR_CLEAR            {  0, 255, 255, ANI_TYPE_ON,  0, 255, 0, 1000, 255}
+#define COLOR_CLOUDS_FEW       {128, 255, 255, ANI_TYPE_ON,  0, 255, 0, 1000, 255}
+#define COLOR_CLOUDS_SCATTERED {255, 255, 255, ANI_TYPE_ON,  0, 255, 0, 1000, 255}
+#define COLOR_CLOUDS_BROKEN    {  0,   0, 255, ANI_TYPE_ON,  0, 255, 0, 1000, 255}
+#define COLOR_RAIN_SHOWER      {  0,   0, 255, ANI_TYPE_PULSE,  64, 255, 0, 1000, 255}
+#define COLOR_RAIN_RAIN        {  0,   0, 255, ANI_TYPE_PULSE,  64, 255, 0, 1000, 255}
+#define COLOR_THUNDERSTORM     {255, 255,   0, ANI_TYPE_PULSE,  0, 255, 0, 1000, 255}
+#define COLOR_SNOW             {255, 255, 255, ANI_TYPE_PULSE,  64, 255, 0, 1000, 255}
+#define COLOR_MIST             {128, 128, 128, ANI_TYPE_ON,  0, 255, 0, 1000, 255}
 
-struct struct_color IconToColor(sint16_t icon) {
-  struct struct_color result;
-  result.r = 0;
-  result.g = 0;
-  result.b = 0;
+struct color_ani IconToColor(sint16_t icon) {
+  struct color_ani result;
+  result = COLOR_OFF;
   switch(icon) {
     case  1:  result = COLOR_CLEAR;            break;
     case  2:  result = COLOR_CLOUDS_FEW;       break;
@@ -146,7 +140,7 @@ struct struct_color IconToColor(sint16_t icon) {
     case 11:  result = COLOR_THUNDERSTORM;     break;
     case 13:  result = COLOR_SNOW;             break;
     case 50:  result = COLOR_MIST;             break;
-    default:  result = {0, 255, 0};            break;
+    default:  result = COLOR_OFF;              break;
   }
   return result;
 }

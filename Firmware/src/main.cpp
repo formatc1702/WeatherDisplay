@@ -7,18 +7,20 @@ int delayval = 20;
 #define DATA_LEN 40
 sint16_t temps[DATA_LEN] = {0};
 sint16_t icons[DATA_LEN] = {0};
-struct struct_color tempcolors[DATA_LEN];
-struct struct_color iconcolors[DATA_LEN];
+struct color_static tempcolors[DATA_LEN];
+struct color_ani    iconcolors[DATA_LEN];
 
 void setup() {
   Serial.begin(115200);
   delay(500);
-  Serial.println("Guten Tag!");
   StartPixels();
   // delay(3000);
-  Serial.println("Hello!");
+  // mypixels[0] = {255, 0, 0, ANI_TYPE_PULSE, 0, 255, 0, 1000, 255};
+  // while(true) {
+  //   animatePixels();
+  //   delay(delayval);
+  // };
   connectWiFiInit();
-
 }
 
 void loop() {
@@ -28,36 +30,49 @@ void loop() {
       MDNS.begin(nodename);
       WF_status = W_READY;
       // getWeatherType();
-      Serial.println("Getting Temps!");
-      fiveDayFcast();
-      getTemperatures(temps);
+      // fiveDayFcast();
+      Serial.println("Getting data!");
+      // getTemperatures(temps);
       getIcons(icons);
       for (size_t i = 0; i < DATA_LEN; i++) {
-        // tempcolors[i] = TempToColor(temps[i]);
-        tempcolors[i] = IconToColor(icons[i]);
+        if (i < NUMPIXELS) {
+          // tempcolors[i] = TempToColor(temps[i]);
+          iconcolors[i] = IconToColor(icons[i]);
 
-        Serial.print(i);
-        Serial.print(" :\t");
-        Serial.print(temps[i]);
-        Serial.print('\t');
-        Serial.print(icons[i]);
-        Serial.print('\t');
-        Serial.print('\t');
-        Serial.print(tempcolors[i].r);
-        Serial.print('\t');
-        Serial.print(tempcolors[i].g);
-        Serial.print('\t');
-        Serial.print(tempcolors[i].b);
+          Serial.print(i);
+          Serial.print(" :\t");
+          // Serial.print(temps[i]);
+          Serial.print('\t');
+          Serial.print(icons[i]);
+          Serial.print('\t');
+          // Serial.print('\t');
+          // Serial.print(tempcolors[i].r);
+          // Serial.print('\t');
+          // Serial.print(tempcolors[i].g);
+          // Serial.print('\t');
+          // Serial.print(tempcolors[i].b);
+          // Serial.print('\t');
+          // Serial.print('\t');
+          // Serial.print('\t');
+
+          Serial.print(iconcolors[i].r);
+          Serial.print('\t');
+          Serial.print(iconcolors[i].g);
+          Serial.print('\t');
+          Serial.print(iconcolors[i].b);
+          Serial.print('\t');
+
+          mypixels[i]  = iconcolors[i];
+        }
+
         Serial.print('\n');
         if (i % 8 == 7)
           Serial.print('\n');
-
-        if (i < NUMPIXELS)
-          SetPixelColor(i, tempcolors[i].r, tempcolors[i].g, tempcolors[i].b);
       }
-      ShowPixels();
+      // ShowPixels();
       while(true) {
-        delay(1000);
+        animatePixels();
+        delay(delayval);
       };
     }
   }

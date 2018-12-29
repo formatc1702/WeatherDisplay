@@ -12,61 +12,80 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, NP_PIN, NEO_GRB + NEO_KH
 #define ANI_TYPE_BLINK 2
 #define ANI_TYPE_PULSE 3
 #define ANI_TYPE_RAMP  4
-uint32_t colors[NUMPIXELS];
 
-// input colors
-uint8_t  ri[NUMPIXELS];
-uint8_t  gi[NUMPIXELS];
-uint8_t  bi[NUMPIXELS];
+struct color_static {
+  uint8_t r;
+  uint8_t g;
+  uint8_t b;
+};
 
-// animation parameters
-uint8_t  ani_type   [NUMPIXELS];
-uint8_t  ani_min    [NUMPIXELS];
-uint8_t  ani_max    [NUMPIXELS];
-uint16_t ani_offset [NUMPIXELS];
-uint16_t ani_time   [NUMPIXELS];
+struct color_ani {
+  uint8_t  r;
+  uint8_t  g;
+  uint8_t  b;
+  uint8_t  ani_type;
+  uint8_t  ani_min;
+  uint8_t  ani_max;
+  uint16_t ani_offset;
+  uint16_t ani_time;
+  uint16_t brightness;
+};
 
-// internal variables
-uint16_t  brightness[NUMPIXELS];
+// uint32_t colors[NUMPIXELS];
+struct color_ani mypixels[NUMPIXELS];
 
-// input colors
-uint8_t  ro[NUMPIXELS];
-uint8_t  go[NUMPIXELS];
-uint8_t  bo[NUMPIXELS];
 
 void StartPixels() {
   pixels.begin();
+  for (size_t i = 0; i < NUMPIXELS; i++) {
+    mypixels[i].r = 0;
+    mypixels[i].g = 0;
+    mypixels[i].b = 0;
+    mypixels[i].ani_type = ANI_TYPE_ON;
+    mypixels[i].ani_min = 0;
+    mypixels[i].ani_max = 255;
+    mypixels[i].ani_offset = 0;
+    mypixels[i].ani_time = 1000;
+    mypixels[i].brightness = 255;
+  }
 }
 
-void animate() {
+void animatePixels() {
   long now = millis();
+  uint8_t ro, go, bo;
   for (size_t i = 0; i < NUMPIXELS; i++) {
-    switch (ani_type[i]) {
+    switch (mypixels[i].ani_type) {
       case ANI_TYPE_OFF:
-        brightness[i] = 0;
+        mypixels[i].brightness = 0;
         break;
       case ANI_TYPE_ON:
-        brightness[i] = ani_max[i];
+        mypixels[i].brightness = mypixels[i].ani_max;
         break;
       case ANI_TYPE_BLINK:
-        if ((now + ani_offset[i]) % ani_time[i] < ani_time[i] / 2)
-          brightness[i] = ani_max[i];
+        if ((now + mypixels[i].ani_offset) % mypixels[i].ani_time < mypixels[i].ani_time / 2)
+          mypixels[i].brightness = mypixels[i].ani_max;
         else
-          brightness[i] = ani_min[i];
+          mypixels[i].brightness = mypixels[i].ani_min;
         break;
       case ANI_TYPE_PULSE:
-        brightness[i] = (uint8_t)map((long)
-                                     (255.0 * (0.5 * sin( (float)(now + ani_offset[i]) * 2.0 * 3.14159 / (float)ani_time[i]) + 0.5)),
-                                     0, 255, ani_min[i], ani_max[i]);
+        mypixels[i].brightness = (uint8_t)map((long)
+                                     (255.0 * (0.5 * sin( (float)(now + mypixels[i].ani_offset) * 2.0 * 3.14159 / (float)mypixels[i].ani_time) + 0.5)),
+                                     0, 255, mypixels[i].ani_min, mypixels[i].ani_max);
         break;
       default:
-        brightness[i] = 255;
+        mypixels[i].brightness = 255;
     }
-    ro[i] = (uint8_t)(((uint16_t)ri[i] * brightness[i]) / 256);
-    go[i] = (uint8_t)(((uint16_t)gi[i] * brightness[i]) / 256);
-    bo[i] = (uint8_t)(((uint16_t)bi[i] * brightness[i]) / 256);
-    pixels.setPixelColor(i, pixels.Color(ro[i], go[i], bo[i]));
+    ro = (uint8_t)(((uint16_t)mypixels[i].r * mypixels[i].brightness) / 256);
+    go = (uint8_t)(((uint16_t)mypixels[i].g * mypixels[i].brightness) / 256);
+    bo = (uint8_t)(((uint16_t)mypixels[i].b * mypixels[i].brightness) / 256);
+    pixels.setPixelColor(i, ro, go, bo);
+    // if(i == 0) {
+    //   Serial.println(ro);
+    //   Serial.println(go);
+    //   Serial.println(bo);
+    // }
   }
+  pixels.show();
 }
 
 void SetPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b) {
