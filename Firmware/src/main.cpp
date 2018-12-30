@@ -12,7 +12,24 @@ int delayval = 20;
 sint16_t temps[DATA_LEN] = {0};
 sint16_t ids  [DATA_LEN] = {0};
 // sint16_t icons[DATA_LEN] = {0};
-// sint16_t ids  [DATA_LEN] = {200, 201, 202, 210, 211, 212, 221, 230, 231, 232, 600, 601, 602, 310, 311, 312, 313, 314, 321, 500, 501, 502, 511, 520, 521, 522, 531, 800, 801, 802, 803, 804};
+sint16_t fakeids  [DATA_LEN] = {
+800,
+801,
+802,
+803,
+804,
+500,
+501,
+502,
+212,
+211,
+210,
+201,
+200,
+600,
+601,
+602
+};
 struct color_static tempcolors[DATA_LEN];
 struct color_ani    idcolors  [DATA_LEN];
 // struct color_ani    iconcolors[DATA_LEN];
@@ -33,14 +50,18 @@ void loop() {
       MDNS.begin(nodename);
       WF_status = W_READY;
       // get data from API
-      // getCurrentConditions();
       get5DayForecast();
       // process data
       getTemperatures(temps);
       getIds(ids);
       // getIcons(icons);
 
-      // myhour = 12;
+      // for (size_t i = 0; i < DATA_LEN; i++) {
+      //   ids[i] = fakeids[i];
+      // }
+      // myhour = 0;
+
+
       Serial.print(F("Timestamp: "));
       Serial.print(mytime);
       Serial.print(F("; Hour: "));
