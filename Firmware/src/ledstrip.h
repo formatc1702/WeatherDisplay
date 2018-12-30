@@ -209,11 +209,11 @@ void animatePixels() {
     } else {
       color_out = dimCurve_3(color_out);
     }
-    pixels.setPixelColor(i,   color_out.r, color_out.g, color_out.b);
-    // if (2 * i + 1 < NUMPIXELS) {
-    //   pixels.setPixelColor(2*i,   color_out.r, color_out.g, color_out.b);
-    //   pixels.setPixelColor(2*i+1, color_out.r, color_out.g, color_out.b);
-    // }
+    // pixels.setPixelColor(i,   color_out.r, color_out.g, color_out.b);
+    if (2 * i + 1 < NUMPIXELS) {
+      pixels.setPixelColor(2*i,   color_out.r, color_out.g, color_out.b);
+      pixels.setPixelColor(2*i+1, color_out.r, color_out.g, color_out.b);
+    }
     // if(i == 0) {
     //   Serial.println(ro);
     //   Serial.println(go);

@@ -90,25 +90,19 @@ void loop() {
       }
       int offset = 0;
       // show temperatures
-      for (size_t i = 0; i < 32; i++) {
-        if (i >= 16)
-          offset = 2;
-        else
-          offset = 0;
-        mypixels[i+offset].r = tempcolors[i].r;
-        mypixels[i+offset].g = tempcolors[i].g;
-        mypixels[i+offset].b = tempcolors[i].b;
-        mypixels[i+offset].ani_type = ANI_TYPE_ON;
-        mypixels[i+offset].ani_max = 255;
-        mypixels[i+offset].brightness = 255;
+      for (size_t i = 0; i < 16; i++) {
+          offset = i >= 8;
+          mypixels[i+offset].r = tempcolors[i].r;
+          mypixels[i+offset].g = tempcolors[i].g;
+          mypixels[i+offset].b = tempcolors[i].b;
+          mypixels[i+offset].ani_type = ANI_TYPE_ON;
+          mypixels[i+offset].ani_max = 255;
+          mypixels[i+offset].brightness = 255;
       }
       // show weather condition colors
-      for (size_t i = 0; i < 32; i++) {
-        if (i >= 16)
-          offset = 2;
-        else
-          offset = 0;
-        mypixels[68-1-i-offset]  = idcolors[i];
+      for (size_t i = 0; i < 16; i++) {
+        offset = i >= 8;
+        mypixels[34-1-i-offset]  = idcolors[i];
       }
       while(true) {
         animatePixels();

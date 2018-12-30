@@ -18,7 +18,8 @@ const char *nodename = "esp8266-weather";
 const char *wifi_ssid = WIFI_SSID;
 const char *wifi_passwd = WIFI_PW;
 
-sint16_t temperatures[40];
+#define NUM_ENTRIES 16
+sint16_t temperatures[NUM_ENTRIES];
 
 typedef enum wifi_s {
   W_AP = 0, W_READY, W_TRY
@@ -98,7 +99,7 @@ void get5DayForecast() {
 }
 
 void getTemperatures(sint16_t *buf) {
-  for (byte i = 0; i <= entries; ++i) {
+  for (byte i = 0; i <= NUM_ENTRIES; ++i) {
     buf[i] = (int)round(ow_fcast5[i].temp.toFloat()); // <- AVERAGE OF MIN AND MAX! IS THIS OK?
     // buf[i] = (int)round((ow_fcast5[i].t_min.toFloat() + ow_fcast5[i].t_max.toFloat()) / 2); // <- AVERAGE OF MIN AND MAX! IS THIS OK?
   }
@@ -107,7 +108,7 @@ void getTemperatures(sint16_t *buf) {
 void getIcons(sint16_t *buf) {
   // OWM_fiveForecast *ow_fcast5 = new OWM_fiveForecast[40];
   // byte entries = owF5.updateForecast(ow_fcast5, 40, ow_key, OWM_COUNTRY, OWM_CITY, "metric");
-  for (byte i = 0; i <= entries; ++i) {
+  for (byte i = 0; i <= NUM_ENTRIES; ++i) {
     buf[i] = ow_fcast5[i].icon.toInt();
   }
 }
@@ -115,7 +116,7 @@ void getIcons(sint16_t *buf) {
 void getIds(sint16_t *buf) {
   // OWM_fiveForecast *ow_fcast5 = new OWM_fiveForecast[40];
   // byte entries = owF5.updateForecast(ow_fcast5, 40, ow_key, OWM_COUNTRY, OWM_CITY, "metric");
-  for (byte i = 0; i <= entries; ++i) {
+  for (byte i = 0; i <= NUM_ENTRIES; ++i) {
     buf[i] = ow_fcast5[i].id.toInt();
   }
 }
