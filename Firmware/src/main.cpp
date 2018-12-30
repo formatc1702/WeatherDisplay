@@ -9,7 +9,6 @@
 
 int delayval = 20;
 
-#define DATA_LEN 40
 sint16_t temps[DATA_LEN] = {0};
 sint16_t icons[DATA_LEN] = {0};
 sint16_t ids  [DATA_LEN] = {0};
@@ -21,27 +20,48 @@ struct color_ani    idcolors  [DATA_LEN];
 void setup() {
   Serial.begin(115200);
   delay(500);
-  Serial.println("Hello World!");
+  Serial.println(F("Hello World!"));
   StartPixels();
-  // for (size_t i = 0; i < DATA_LEN; i++) {
-  //   temps[i] = 0;
-  //   icons[i] = 0;
-  //   ids  [i] = 0;
-  // }
-  Serial.print("Connecting to WiFi... ");
+  Serial.print(F("Connecting to WiFi... "));
   connectWiFiInit();
 }
 
 void loop() {
   if (WF_status == W_TRY) {
     if (WiFi.status() == WL_CONNECTED) {
-      Serial.println("Connected!");
+      Serial.println(F("Connected!"));
       MDNS.begin(nodename);
       WF_status = W_READY;
+      currentConditions();
+      Serial.print("timestamp: ");
+      Serial.println(mytime);
+      Serial.print("HOUR: ");
+      Serial.println(myhour);
       get5DayForecast();
       getTemperatures(temps);
       // getIcons(icons);
       getIds(ids);
+
+      // for (size_t i = 0; i < 16; i++) {
+      //   temps[i] = map(i,0,15,-15,35);
+      // }
+      // ids[0] = 800;
+      // ids[1] = 801;
+      // ids[2] = 802;
+      // ids[3] = 803;
+      // ids[4] = 804;
+      // ids[5] = 500;
+      // ids[6] = 501;
+      // ids[7] = 502;
+      // ids[8] = 503;
+      // ids[9] = 504;
+      // ids[10] = 211;
+      // ids[11] = 212;
+      // ids[12] = 511;
+      // ids[13] = 600;
+      // ids[14] = 601;
+      // ids[15] = 602;
+
       for (size_t i = 0; i < DATA_LEN; i++) {
         if (i < NUMPIXELS) {
           tempcolors[i] = TempToColor(temps[i]);
@@ -58,14 +78,15 @@ void loop() {
           // iconcolors[7] = COLOR_SNOW;
           // iconcolors[8] = COLOR_MIST;
 
-          Serial.print(i);
-          Serial.print(" :\t");
-          Serial.print(temps[i]);
-          Serial.print('\t');
-          Serial.print(icons[i]);
-          Serial.print('\t');
-          Serial.print(ids[i]);
-          Serial.print('\t');
+          // Serial.print(i);
+          // Serial.print(" :\t");
+          // Serial.print(temps[i]);
+          // Serial.print('\t');
+          // Serial.print(icons[i]);
+          // Serial.print('\t');
+          // Serial.print(ids[i]);
+          // Serial.print('\t');
+
           // Serial.print('\t');
           // Serial.print(tempcolors[i].r);
           // Serial.print('\t');
@@ -82,27 +103,27 @@ void loop() {
           // Serial.print('\t');
           // Serial.print(iconcolors[i].b);
           // Serial.print('\t');
-          Serial.print('\n');
-          if (i % 8 == 7)
-            Serial.print('\n');
+
+          // Serial.print('\n');
+          // if (i % 8 == 7)
+          //   Serial.print('\n');
+
         }
 
       }
       int offset = 0;
-      // show temperatures
       for (size_t i = 0; i < 16; i++) {
-          offset = i >= 8;
-          mypixels[i+offset].r = tempcolors[i].r;
-          mypixels[i+offset].g = tempcolors[i].g;
-          mypixels[i+offset].b = tempcolors[i].b;
-          mypixels[i+offset].ani_type = ANI_TYPE_ON;
-          mypixels[i+offset].ani_max = 255;
-          mypixels[i+offset].brightness = 255;
-      }
-      // show weather condition colors
-      for (size_t i = 0; i < 16; i++) {
-        offset = i >= 8;
-        mypixels[34-1-i-offset]  = idcolors[i];
+        // offset = i >= 8;
+        offset = (i+4)/8;
+        // show temperatures
+        mypixels[i+offset].r = tempcolors[i].r;
+        mypixels[i+offset].g = tempcolors[i].g;
+        mypixels[i+offset].b = tempcolors[i].b;
+        mypixels[i+offset].ani_type = ANI_TYPE_ON;
+        mypixels[i+offset].ani_max = 255;
+        mypixels[i+offset].brightness = 255;
+        // show weather condition colors
+        mypixels[34-1-i-offset] = idcolors[i];
       }
       while(true) {
         animatePixels();

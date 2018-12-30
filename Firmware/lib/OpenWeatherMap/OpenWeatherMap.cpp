@@ -26,6 +26,9 @@ void OWMrequest::doUpdate(String url, byte maxForecasts) {
         if (isBody) {
           parser.parse(c);
         }
+        if((size = client->available()) == 0) {
+          delay(1);
+        }
       }
     }
   }
@@ -328,4 +331,3 @@ void OWMsixteenForecast::value(String value) {
     forecasts[index].clouds = value;
   }
 }
-
