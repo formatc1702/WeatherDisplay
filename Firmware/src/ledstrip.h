@@ -4,7 +4,7 @@
 #include <Adafruit_NeoPixel.h>
 
 #define NP_PIN          4
-#define NUMPIXELS      40
+#define NUMPIXELS      68
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, NP_PIN, NEO_GRB + NEO_KHZ800);
 
 #define ANI_TYPE_OFF   0

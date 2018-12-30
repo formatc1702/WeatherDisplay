@@ -88,28 +88,29 @@ void loop() {
         }
 
       }
-      // ShowPixels();
+      int offset = 0;
+      // show temperatures
+      for (size_t i = 0; i < 32; i++) {
+        if (i >= 16)
+          offset = 2;
+        else
+          offset = 0;
+        mypixels[i+offset].r = tempcolors[i].r;
+        mypixels[i+offset].g = tempcolors[i].g;
+        mypixels[i+offset].b = tempcolors[i].b;
+        mypixels[i+offset].ani_type = ANI_TYPE_ON;
+        mypixels[i+offset].ani_max = 255;
+        mypixels[i+offset].brightness = 255;
+      }
+      // show weather condition colors
+      for (size_t i = 0; i < 32; i++) {
+        if (i >= 16)
+          offset = 2;
+        else
+          offset = 0;
+        mypixels[68-1-i-offset]  = idcolors[i];
+      }
       while(true) {
-        // show weather id colors
-        // for (size_t i = 0; i < NUMPIXELS; i++) {
-        //   mypixels[i]  = idcolors[i];
-        // }
-        if (millis() % 10000 < 5000) {
-          // show temperatures
-          for (size_t i = 0; i < NUMPIXELS; i++) {
-            mypixels[i].r = tempcolors[i].r;
-            mypixels[i].g = tempcolors[i].g;
-            mypixels[i].b = tempcolors[i].b;
-            mypixels[i].ani_type = ANI_TYPE_ON;
-            mypixels[i].ani_max = 255;
-            mypixels[i].brightness = 255;
-          }
-        } else {
-          // show weather condition colors
-          for (size_t i = 0; i < NUMPIXELS; i++) {
-            mypixels[i]  = idcolors[i];
-          }
-        }
         animatePixels();
         delay(delayval);
       };
