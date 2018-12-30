@@ -24,6 +24,19 @@
 /* 211 */ #define COLOR_THUNDERSTORM                 {  0,  64, 255, ANI_TYPE_PULSE,  128, 255,   0, 1000, 0, 255, 16}
 /* 212 */ #define COLOR_HEAVY_THUNDERSTORM           {  0,   0, 255, ANI_TYPE_PULSE,    0, 255,   0, 1000, 0, 255, 24}
 /* 221 */ #define COLOR_RAGGED_THUNDERSTORM          {  0,   0, 255, ANI_TYPE_PULSE,    0, 255,   0,  500, 0, 255, 32}
+/* 230 */
+/* 231 */
+/* 232 */
+
+/* 300 */
+/* 301 */
+/* 302 */
+/* 310 */
+/* 311 */
+/* 312 */
+/* 313 */
+/* 314 */
+/* 321 */
 
 /* 500 */ #define COLOR_LIGHT_RAIN           {255, 128,   0, ANI_TYPE_PULSE_WHITE,  192, 255,   0, 1000, 0, 255}
 /* 501 */ #define COLOR_MODERATE_RAIN        {  0,  64, 255, ANI_TYPE_PULSE,        128, 255,   0, 1000, 0, 255}
@@ -31,11 +44,32 @@
 /* 503 */ #define COLOR_VERY_HEAVY_RAIN      {  0,   0, 255, ANI_TYPE_PULSE,          0, 255,   0,  500, 0, 255}
 /* 504 */ #define COLOR_EXTREME_RAIN         {  0,   0, 255, ANI_TYPE_PULSE,          0, 255,   0,  250, 0, 255}
 /* 511 */ #define COLOR_FREEZING_RAIN        {255, 128,   0, ANI_TYPE_PULSE_WHITE,    0, 255,   0, 1000, 0, 255} // COLOR INVERTED FOR WHITE PULSE
+/* 520 */
+/* 521 */
+/* 522 */
+/* 531 */
 
 /* 600 */ #define COLOR_LIGHT_SNOW {255, 255, 255, ANI_TYPE_PULSE,  192, 255,   0, 1000, 0, 255}
 /* 601 */ #define COLOR_SNOW       {255, 255, 255, ANI_TYPE_PULSE,  128, 255,   0, 1000, 0, 255}
 /* 602 */ #define COLOR_HEAVY_SNOW {255, 255, 255, ANI_TYPE_PULSE,    0, 255,   0, 1000, 0, 255}
+/* 611 */
+/* 612 */
+/* 615 */
+/* 616 */
+/* 620 */
+/* 621 */
+/* 622 */
 
+/* 701 */
+/* 711 */
+/* 721 */
+/* 731 */
+/* 741 */
+/* 751 */
+/* 761 */
+/* 762 */
+/* 771 */
+/* 781 */
 
 /* 800 */ #define COLOR_CLEAR_SKY        {255, 255,   0, ANI_TYPE_ON,      0, 255,   0, 1000, 0, 255}
 /* 801 */ #define COLOR_FEW_CLOUDS       {255, 255, 128, ANI_TYPE_ON,      0, 255,   0, 1000, 0, 255}
