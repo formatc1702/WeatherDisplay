@@ -3,30 +3,7 @@
 
 #include <Arduino.h>
 #include "ledstrip.h"
-
-#define ID_CLEAR 800
-// Group 3xx: Rain
-#define ID_LIGHT_DRIZZLE 300
-#define ID_DRIZZLE 301
-#define ID_HEAVY_DRIZZLE 302
-#define ID_LIGHT_DRIZZLE_RAIN 310
-#define ID_DRIZZLE_RAIN 311
-#define ID_HEAVY_DRIZZLE_RAIN 312
-#define ID_SHOWER_RAIN_AND_DRIZZLE 313
-#define ID_HEAVY_SHOWER_RAIN_AND_DRIZZLE 314
-#define ID_SHOWER_DRIZZLE 321
-// Group 5xx: Rain
-#define ID_LIGHT_RAIN 500
-#define ID_MODERATE_RAIN 501
-#define ID_HEAVY_INTENSITY_RAIN 502
-#define ID_VERY_HEAVY_RAIN 503
-#define ID_EXTREME_RAIN 504
-#define ID_FREEZING_RAIN 511
-#define ID_LIGHT_INTENSITY_SHOWER_RAIN 520
-#define ID_SHOWER_RAIN 521
-#define ID_HEAVY_INTENSITY_SHOWER_RAIN 522
-#define ID_RAGGED_SHOWER_RAIN 531
-
+#include "weatherids.h"
 
 #define COLOR_OFF              {255,   0,   0, ANI_TYPE_PULSE,   0, 255,   0, 1000, 0, 255}
 #define COLOR_CLEAR            {255, 255,   0, ANI_TYPE_ON,      0, 255,   0, 1000, 0, 255}
@@ -67,7 +44,7 @@ struct color_ani IdToColor(sint16_t id) {
   struct color_ani result;
   result = COLOR_OFF;
   switch(id) {
-    // TODO 
+    // TODO
   }
   return result;
 }
