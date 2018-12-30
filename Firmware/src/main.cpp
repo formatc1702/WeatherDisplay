@@ -33,6 +33,7 @@ void loop() {
       MDNS.begin(nodename);
       WF_status = W_READY;
       currentConditions();
+      myhour = 12;
       Serial.print("timestamp: ");
       Serial.println(mytime);
       Serial.print("HOUR: ");
@@ -78,14 +79,14 @@ void loop() {
           // iconcolors[7] = COLOR_SNOW;
           // iconcolors[8] = COLOR_MIST;
 
-          // Serial.print(i);
-          // Serial.print(" :\t");
-          // Serial.print(temps[i]);
-          // Serial.print('\t');
-          // Serial.print(icons[i]);
-          // Serial.print('\t');
-          // Serial.print(ids[i]);
-          // Serial.print('\t');
+          Serial.print(i);
+          Serial.print(" :\t");
+          Serial.print(temps[i]);
+          Serial.print('\t');
+          Serial.print(icons[i]);
+          Serial.print('\t');
+          Serial.print(ids[i]);
+          Serial.print('\t');
 
           // Serial.print('\t');
           // Serial.print(tempcolors[i].r);
@@ -104,17 +105,17 @@ void loop() {
           // Serial.print(iconcolors[i].b);
           // Serial.print('\t');
 
-          // Serial.print('\n');
-          // if (i % 8 == 7)
-          //   Serial.print('\n');
+          Serial.print('\n');
+          if (i % 8 == 7)
+            Serial.print('\n');
 
         }
 
       }
       int offset = 0;
-      for (size_t i = 0; i < 16; i++) {
+      for (size_t i = 0; i < 15; i++) {
         // offset = i >= 8;
-        offset = (i+4)/8;
+        offset = (myhour + i*3)/24;
         // show temperatures
         mypixels[i+offset].r = tempcolors[i].r;
         mypixels[i+offset].g = tempcolors[i].g;
