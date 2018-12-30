@@ -11,7 +11,7 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, NP_PIN, NEO_GRB + NEO_KH
 #define ANI_TYPE_ON    1
 #define ANI_TYPE_BLINK 2
 #define ANI_TYPE_PULSE 3
-#define ANI_TYPE_PULSE_WHITE 4 // TODO
+#define ANI_TYPE_PULSE_WHITE 4
 #define ANI_TYPE_RAMP  5
 
 const byte dim_curve[] = {
@@ -57,11 +57,6 @@ struct color_ani mypixels[NUMPIXELS];
 
 struct color_static HSV2RGB(int hue, int sat, int val) {
   struct color_static result;
-  /* convert hue, saturation and brightness ( HSB/HSV ) to RGB
-     The dim_curve is used only on brightness/value and on saturation (inverted).
-     This looks the most natural.
-  */
-
   val = dim_curve[val];
   sat = 255-dim_curve[255-sat];
 
@@ -202,7 +197,7 @@ void animatePixels() {
       color_out.g = (uint8_t)(((uint16_t)mypixels[i].g * mypixels[i].brightness) / 256);
       color_out.b = (uint8_t)(((uint16_t)mypixels[i].b * mypixels[i].brightness) / 256);
     }
-    if (random(255) + 1 < mypixels[i].flash) {
+    if (random(254) + 1 < mypixels[i].flash) {
       color_out.r = 255;
       color_out.g = 255;
       color_out.b = 0;
@@ -214,11 +209,6 @@ void animatePixels() {
       pixels.setPixelColor(2*i,   color_out.r, color_out.g, color_out.b);
       pixels.setPixelColor(2*i+1, color_out.r, color_out.g, color_out.b);
     }
-    // if(i == 0) {
-    //   Serial.println(ro);
-    //   Serial.println(go);
-    //   Serial.println(bo);
-    // }
   }
   pixels.show();
 }
