@@ -15,7 +15,7 @@ sint16_t icons[DATA_LEN] = {0};
 sint16_t ids  [DATA_LEN] = {0};
 // sint16_t ids  [DATA_LEN] = {200, 201, 202, 210, 211, 212, 221, 230, 231, 232, 600, 601, 602, 310, 311, 312, 313, 314, 321, 500, 501, 502, 511, 520, 521, 522, 531, 800, 801, 802, 803, 804};
 struct color_static tempcolors[DATA_LEN];
-struct color_ani    iconcolors[DATA_LEN];
+// struct color_ani    iconcolors[DATA_LEN];
 struct color_ani    idcolors  [DATA_LEN];
 
 void setup() {
@@ -40,12 +40,12 @@ void loop() {
       WF_status = W_READY;
       get5DayForecast();
       getTemperatures(temps);
-      getIcons(icons);
+      // getIcons(icons);
       getIds(ids);
       for (size_t i = 0; i < DATA_LEN; i++) {
         if (i < NUMPIXELS) {
           tempcolors[i] = TempToColor(temps[i]);
-          iconcolors[i] = IconToColor(icons[i]);
+          // iconcolors[i] = IconToColor(icons[i]);
           idcolors[i]   = IdToColor  (ids  [i]);
 
           // iconcolors[0] = COLOR_CLEAR;
