@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#include "userkeys.h"
+#include "config.h"
 #include "weathercolors.h"
 
 #include <ESP8266WiFi.h>
