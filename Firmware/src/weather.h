@@ -112,4 +112,12 @@ void getIcons(sint16_t *buf) {
   }
 }
 
+void getIds(sint16_t *buf) {
+  // OWM_fiveForecast *ow_fcast5 = new OWM_fiveForecast[40];
+  // byte entries = owF5.updateForecast(ow_fcast5, 40, ow_key, OWM_COUNTRY, OWM_CITY, "metric");
+  for (byte i = 0; i <= entries; ++i) {
+    buf[i] = ow_fcast5[i].id.toInt();
+  }
+}
+
 #endif
