@@ -11,7 +11,8 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, NP_PIN, NEO_GRB + NEO_KH
 #define ANI_TYPE_ON    1
 #define ANI_TYPE_BLINK 2
 #define ANI_TYPE_PULSE 3
-#define ANI_TYPE_RAMP  4
+#define ANI_TYPE_PULSE_WHITE 4 // TODO
+#define ANI_TYPE_RAMP  5
 
 const byte dim_curve[] = {
     0,   1,   1,   2,   2,   2,   2,   2,   2,   3,   3,   3,   3,   3,   3,   3,
@@ -49,6 +50,7 @@ struct color_ani {
   uint16_t ani_time;
   uint16_t ani_duty;
   uint16_t brightness;
+  uint8_t  flash;
 };
 
 struct color_ani mypixels[NUMPIXELS];
@@ -161,6 +163,7 @@ void StartPixels() {
     mypixels[i].ani_time = 1000;
     mypixels[i].ani_duty = 1000;
     mypixels[i].brightness = 255;
+    mypixels[i].flash = 0;
   }
 }
 
@@ -181,7 +184,8 @@ void animatePixels() {
         else
           mypixels[i].brightness = mypixels[i].ani_min;
         break;
-      case ANI_TYPE_PULSE:
+        case ANI_TYPE_PULSE:
+        case ANI_TYPE_PULSE_WHITE:
         mypixels[i].brightness = (uint8_t)map((long)
                                      (255.0 * (0.5 * sin( (float)(now + mypixels[i].ani_offset) * 2.0 * 3.14159 / (float)mypixels[i].ani_time) + 0.5)),
                                      0, 255, mypixels[i].ani_min, mypixels[i].ani_max);
@@ -189,11 +193,27 @@ void animatePixels() {
       default:
         mypixels[i].brightness = 255;
     }
-    color_out.r = (uint8_t)(((uint16_t)mypixels[i].r * mypixels[i].brightness) / 256);
-    color_out.g = (uint8_t)(((uint16_t)mypixels[i].g * mypixels[i].brightness) / 256);
-    color_out.b = (uint8_t)(((uint16_t)mypixels[i].b * mypixels[i].brightness) / 256);
-    color_out = dimCurve_3(color_out);
-    pixels.setPixelColor(i, color_out.r, color_out.g, color_out.b);
+    if (mypixels[i].ani_type == ANI_TYPE_PULSE_WHITE) {
+      color_out.r = 255 - (uint8_t)(((uint16_t)mypixels[i].r * mypixels[i].brightness) / 256);
+      color_out.g = 255 - (uint8_t)(((uint16_t)mypixels[i].g * mypixels[i].brightness) / 256);
+      color_out.b = 255 - (uint8_t)(((uint16_t)mypixels[i].b * mypixels[i].brightness) / 256);
+    } else {
+      color_out.r = (uint8_t)(((uint16_t)mypixels[i].r * mypixels[i].brightness) / 256);
+      color_out.g = (uint8_t)(((uint16_t)mypixels[i].g * mypixels[i].brightness) / 256);
+      color_out.b = (uint8_t)(((uint16_t)mypixels[i].b * mypixels[i].brightness) / 256);
+    }
+    if (random(255) + 1 < mypixels[i].flash) {
+      color_out.r = 255;
+      color_out.g = 255;
+      color_out.b = 0;
+    } else {
+      color_out = dimCurve_3(color_out);
+    }
+    pixels.setPixelColor(i,   color_out.r, color_out.g, color_out.b);
+    // if (2 * i + 1 < NUMPIXELS) {
+    //   pixels.setPixelColor(2*i,   color_out.r, color_out.g, color_out.b);
+    //   pixels.setPixelColor(2*i+1, color_out.r, color_out.g, color_out.b);
+    // }
     // if(i == 0) {
     //   Serial.println(ro);
     //   Serial.println(go);

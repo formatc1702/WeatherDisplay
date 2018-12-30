@@ -1,6 +1,11 @@
 #include "ledstrip.h"
-#include "weather.h"
+#include "weatherapi.h"
 #include "weathercolors.h"
+
+// extern "C" {
+// #include "user_interface.h"
+// }
+// uint32_t free = system_get_free_heap_size();
 
 int delayval = 20;
 
@@ -8,6 +13,7 @@ int delayval = 20;
 sint16_t temps[DATA_LEN] = {0};
 sint16_t icons[DATA_LEN] = {0};
 sint16_t ids  [DATA_LEN] = {0};
+// sint16_t ids  [DATA_LEN] = {200, 201, 202, 210, 211, 212, 221, 230, 231, 232, 600, 601, 602, 310, 311, 312, 313, 314, 321, 500, 501, 502, 511, 520, 521, 522, 531, 800, 801, 802, 803, 804};
 struct color_static tempcolors[DATA_LEN];
 struct color_ani    iconcolors[DATA_LEN];
 struct color_ani    idcolors  [DATA_LEN];
@@ -17,11 +23,11 @@ void setup() {
   delay(500);
   Serial.println("Hello World!");
   StartPixels();
-  for (size_t i = 0; i < DATA_LEN; i++) {
-    temps[i] = 0;
-    icons[i] = 0;
-    ids  [i] = 0;
-  }
+  // for (size_t i = 0; i < DATA_LEN; i++) {
+  //   temps[i] = 0;
+  //   icons[i] = 0;
+  //   ids  [i] = 0;
+  // }
   Serial.print("Connecting to WiFi... ");
   connectWiFiInit();
 }
@@ -35,12 +41,12 @@ void loop() {
       get5DayForecast();
       getTemperatures(temps);
       getIcons(icons);
-      // getIds(ids);
+      getIds(ids);
       for (size_t i = 0; i < DATA_LEN; i++) {
         if (i < NUMPIXELS) {
           tempcolors[i] = TempToColor(temps[i]);
           iconcolors[i] = IconToColor(icons[i]);
-          // idcolors[i] = IdToColor(icons[i]);
+          idcolors[i]   = IdToColor  (ids  [i]);
 
           // iconcolors[0] = COLOR_CLEAR;
           // iconcolors[1] = COLOR_CLOUDS_FEW;
@@ -84,6 +90,10 @@ void loop() {
       }
       // ShowPixels();
       while(true) {
+        // show weather id colors
+        // for (size_t i = 0; i < NUMPIXELS; i++) {
+        //   mypixels[i]  = idcolors[i];
+        // }
         if (millis() % 10000 < 5000) {
           // show temperatures
           for (size_t i = 0; i < NUMPIXELS; i++) {
@@ -97,7 +107,7 @@ void loop() {
         } else {
           // show weather condition colors
           for (size_t i = 0; i < NUMPIXELS; i++) {
-            mypixels[i]  = iconcolors[i];
+            mypixels[i]  = idcolors[i];
           }
         }
         animatePixels();
