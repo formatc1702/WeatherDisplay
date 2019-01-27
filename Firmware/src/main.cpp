@@ -34,6 +34,9 @@ struct color_static tempcolors[DATA_LEN];
 struct color_ani    idcolors  [DATA_LEN];
 // struct color_ani    iconcolors[DATA_LEN];
 
+#define SLEEP_DELAY 60000
+uint32_t lastupdatetime = 0;
+
 void setup() {
   Serial.begin(115200);
   delay(500);
@@ -108,10 +111,21 @@ void loop() {
         // in reverse because of the way the LEDs are wired
         mypixels[34-1-i-offset] = idcolors[i];
       }
-      while(true) {
+      lastupdatetime = millis();
+      // show animation until timeout
+      while(millis() - lastupdatetime < SLEEP_DELAY) {
         animatePixels();
         delay(delayval);
       };
+      // timeout occured, turn off all pixels...
+      for (size_t i = 0; i < NUMPIXELS; i++) {
+        mypixels[i].ani_type = ANI_TYPE_OFF;
+      }
+      animatePixels();
+      // ...and sleep
+      Serial.println(F("Time is up! Sleeping..."));
+      ESP.deepSleep(0);
+      while(true);
     }
   }
 }
